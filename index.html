@@ -18,7 +18,6 @@ body{
     color:white;
 }
 
-/* TÍTULO ROMÁNTICO */
 h1{
     font-family:'Great Vibes', cursive;
     font-size:52px;
@@ -26,7 +25,6 @@ h1{
     text-shadow:0 0 15px rgba(255,77,166,0.6);
 }
 
-/* CENTRADO PERFECTO */
 #inicio{
     position:fixed;
     top:50%;
@@ -36,14 +34,6 @@ h1{
     width:90%;
 }
 
-/* ESTRELLAS */
-@keyframes parpadear{
-    0%{opacity:0.2;}
-    50%{opacity:1;}
-    100%{opacity:0.2;}
-}
-
-/* BOTONES */
 .botones{
     margin-top:30px;
     display:flex;
@@ -73,7 +63,6 @@ button{
     color:white;
 }
 
-/* CARTA */
 #carta{
     display:none;
     position:fixed;
@@ -99,10 +88,15 @@ button{
     transition:2s;
 }
 
-/* CORAZONES */
 @keyframes flotar{
     0%{transform:translateY(0);opacity:1;}
     100%{transform:translateY(-600px);opacity:0;}
+}
+
+@keyframes parpadear{
+    0%{opacity:0;}
+    50%{opacity:1;}
+    100%{opacity:0;}
 }
 
 </style>
@@ -111,7 +105,6 @@ button{
 
 <div id="inicio">
     <h1>Con cariño para Karime 💖</h1>
-
     <div class="botones">
         <button class="si" onclick="iniciarConstelacion()">Descubrir sorpresa</button>
         <button id="btnNo" class="no"
@@ -134,22 +127,57 @@ button{
 
 <script>
 
-/* ESTRELLAS */
-for(let i=0;i<150;i++){
-    const estrella=document.createElement("div");
-    estrella.style.position="fixed";
-    estrella.style.width=Math.random()*3+1+"px";
-    estrella.style.height=estrella.style.width;
-    estrella.style.background="white";
-    estrella.style.borderRadius="50%";
-    estrella.style.top=Math.random()*100+"vh";
-    estrella.style.left=Math.random()*100+"vw";
-    estrella.style.opacity=Math.random();
-    estrella.style.animation=`parpadear ${Math.random()*3+2}s infinite`;
-    document.body.appendChild(estrella);
+/* ===============================
+   UNIVERSO PROFUNDO
+================================= */
+
+const fondo = document.createElement("canvas");
+document.body.appendChild(fondo);
+fondo.style.position="fixed";
+fondo.style.top=0;
+fondo.style.left=0;
+fondo.style.zIndex="-1";
+
+const ctxFondo = fondo.getContext("2d");
+
+fondo.width = window.innerWidth;
+fondo.height = window.innerHeight;
+
+let estrellas = [];
+
+for(let i=0;i<200;i++){
+    estrellas.push({
+        x:Math.random()*fondo.width,
+        y:Math.random()*fondo.height,
+        size:Math.random()*2,
+        speed:Math.random()*0.4+0.1
+    });
 }
 
-/* BOTÓN NO */
+function animarFondo(){
+    ctxFondo.clearRect(0,0,fondo.width,fondo.height);
+    ctxFondo.fillStyle="white";
+
+    estrellas.forEach(e=>{
+        e.y += e.speed;
+        if(e.y > fondo.height){
+            e.y = 0;
+            e.x = Math.random()*fondo.width;
+        }
+        ctxFondo.beginPath();
+        ctxFondo.arc(e.x,e.y,e.size,0,Math.PI*2);
+        ctxFondo.fill();
+    });
+
+    requestAnimationFrame(animarFondo);
+}
+
+animarFondo();
+
+/* ===============================
+   BOTÓN NO
+================================= */
+
 function moverNo(){
     const boton=document.getElementById("btnNo");
     const margen=20;
@@ -161,7 +189,10 @@ function moverNo(){
     document.getElementById("buh").play();
 }
 
-/* CONSTELACIÓN */
+/* ===============================
+   CONSTELACIÓN
+================================= */
+
 function iniciarConstelacion(){
 
     const musica=document.getElementById("musica");
@@ -237,7 +268,10 @@ function iniciarConstelacion(){
     },1200);
 }
 
-/* CARTA */
+/* ===============================
+   EFECTO TINTA
+================================= */
+
 function mostrarCarta(){
 
     document.getElementById("carta").style.display="block";
@@ -249,12 +283,20 @@ Espero que tengas un día increíble 💖`;
     let i=0;
     const textoDiv=document.getElementById("texto");
 
+    const cursor = document.createElement("span");
+    cursor.innerHTML="|";
+    cursor.style.animation="parpadear 1s infinite";
+    textoDiv.appendChild(cursor);
+
     function escribir(){
         if(i<mensaje.length){
-            textoDiv.innerHTML+=mensaje.charAt(i);
+            cursor.remove();
+            textoDiv.innerHTML += mensaje.charAt(i);
+            textoDiv.appendChild(cursor);
             i++;
-            setTimeout(escribir,35);
+            setTimeout(escribir,40);
         }else{
+            cursor.remove();
             document.getElementById("foto").style.opacity=1;
             lanzarCorazones();
         }
@@ -263,7 +305,10 @@ Espero que tengas un día increíble 💖`;
     escribir();
 }
 
-/* CORAZONES */
+/* ===============================
+   CORAZONES
+================================= */
+
 function lanzarCorazones(){
     for(let i=0;i<25;i++){
         const corazon=document.createElement("div");

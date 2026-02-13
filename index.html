@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
+
 body{
     margin:0;
     padding:0;
@@ -17,7 +18,7 @@ body{
     color:white;
 }
 
-/* Transición */
+/* Transiciones */
 .fadeOut{
     animation:fadeOut 1s forwards;
 }
@@ -28,6 +29,7 @@ body{
 h1{
     font-family:'Great Vibes', cursive;
     font-size:52px;
+    letter-spacing:2px;
     text-shadow:0 0 20px rgba(255,77,166,0.8);
 }
 
@@ -38,6 +40,7 @@ h1{
     transform:translate(-50%,-50%);
     text-align:center;
     width:90%;
+    transition:1s;
 }
 
 .botones{
@@ -55,6 +58,7 @@ button{
     font-size:18px;
     cursor:pointer;
     min-width:180px;
+    font-family:'Cormorant Garamond', serif;
 }
 
 .si{background:#ff4da6;color:white;}
@@ -80,6 +84,7 @@ button{
     font-size:26px;
     line-height:1.6;
     min-height:150px;
+    white-space:pre-line;
 }
 
 #foto{
@@ -100,6 +105,7 @@ button{
     50%{opacity:1;}
     100%{opacity:0;}
 }
+
 </style>
 </head>
 <body>
@@ -125,7 +131,7 @@ button{
 <script>
 
 /* ===============================
-   FONDO ESPACIAL
+   UNIVERSO CINEMÁTICO
 ================================= */
 
 const fondo=document.createElement("canvas");
@@ -149,7 +155,7 @@ for(let i=0;i<250;i++){
     estrellas.push({
         x:Math.random()*fondo.width,
         y:Math.random()*fondo.height,
-        size:Math.random()*2,
+        size:Math.random()*2.5,
         speed:Math.random()*0.3+0.05
     });
 }
@@ -160,6 +166,7 @@ function animarFondo(){
 
     estrellas.forEach(e=>{
         e.y+=e.speed;
+        e.x+=e.speed*0.2;
         if(e.y>fondo.height){
             e.y=0;
             e.x=Math.random()*fondo.width;
@@ -179,11 +186,14 @@ animarFondo();
 
 const btnSi=document.getElementById("btnSi");
 const btnNo=document.getElementById("btnNo");
+
 let bloqueado=false;
 
 btnSi.addEventListener("click",function(){
+
     if(bloqueado) return;
     bloqueado=true;
+
     btnNo.style.pointerEvents="none";
     btnSi.disabled=true;
 
@@ -201,6 +211,7 @@ btnNo.addEventListener("touchstart",function(e){
 
 function moverNo(){
     if(bloqueado) return;
+
     const margen=20;
     const maxX=window.innerWidth-btnNo.offsetWidth-margen;
     const maxY=window.innerHeight-btnNo.offsetHeight-margen;
@@ -213,7 +224,7 @@ function moverNo(){
 }
 
 /* ===============================
-   CONSTELACIÓN + ESTRELLA
+   CONSTELACIÓN K Y C + ESTRELLA
 ================================= */
 
 function iniciarConstelacion(){
@@ -230,7 +241,7 @@ function iniciarConstelacion(){
     const cy=canvas.height/2;
 
     const size=Math.min(canvas.width,canvas.height)*0.12;
-    const sep=size*2.5;
+    const separacion=size*2.5;
 
     let progreso=0;
 
@@ -251,19 +262,19 @@ function iniciarConstelacion(){
         progreso+=0.015;
 
         if(progreso<=1)
-            drawLine(cx-sep,cy-size,cx-sep,cy+size,progreso);
+            drawLine(cx-separacion,cy-size,cx-separacion,cy+size,progreso);
         else
-            drawLine(cx-sep,cy-size,cx-sep,cy+size,1);
+            drawLine(cx-separacion,cy-size,cx-separacion,cy+size,1);
 
         if(progreso>1)
-            drawLine(cx-sep,cy,cx-sep+size*0.8,cy-size,Math.min(progreso-1,1));
+            drawLine(cx-separacion,cy,cx-separacion+size*0.8,cy-size,Math.min(progreso-1,1));
 
         if(progreso>2)
-            drawLine(cx-sep,cy,cx-sep+size*0.8,cy+size,Math.min(progreso-2,1));
+            drawLine(cx-separacion,cy,cx-separacion+size*0.8,cy+size,Math.min(progreso-2,1));
 
         if(progreso>3){
             ctx.beginPath();
-            ctx.arc(cx+sep,cy,size,0.25*Math.PI,
+            ctx.arc(cx+separacion,cy,size,0.25*Math.PI,
                 (0.25*Math.PI)+(Math.min(progreso-3,1)*1.5*Math.PI));
             ctx.stroke();
         }
@@ -276,11 +287,13 @@ function iniciarConstelacion(){
     }
 
     function estrellaFugaz(){
+
         let x=-100;
         let y=Math.random()*canvas.height*0.5;
         let longitud=150;
 
         function animarEstrella(){
+
             ctx.clearRect(0,0,canvas.width,canvas.height);
 
             ctx.strokeStyle="white";
@@ -288,12 +301,12 @@ function iniciarConstelacion(){
             ctx.shadowColor="#ff4da6";
             ctx.shadowBlur=40;
 
-            drawLine(cx-sep,cy-size,cx-sep,cy+size,1);
-            drawLine(cx-sep,cy,cx-sep+size*0.8,cy-size,1);
-            drawLine(cx-sep,cy,cx-sep+size*0.8,cy+size,1);
+            drawLine(cx-separacion,cy-size,cx-separacion,cy+size,1);
+            drawLine(cx-separacion,cy,cx-separacion+size*0.8,cy-size,1);
+            drawLine(cx-separacion,cy,cx-separacion+size*0.8,cy+size,1);
 
             ctx.beginPath();
-            ctx.arc(cx+sep,cy,size,0.25*Math.PI,1.75*Math.PI);
+            ctx.arc(cx+separacion,cy,size,0.25*Math.PI,1.75*Math.PI);
             ctx.stroke();
 
             ctx.beginPath();
@@ -323,7 +336,7 @@ function iniciarConstelacion(){
 }
 
 /* ===============================
-   CARTA
+   CARTA + CORAZONES
 ================================= */
 
 function mostrarCarta(){
@@ -353,24 +366,12 @@ Me encanta la forma en la que conectamos y lo mucho que disfruto cada minuto a t
     textoDiv.appendChild(cursor);
 
     function escribir(){
-
-        if(i < mensaje.length){
-
+        if(i<mensaje.length){
             cursor.remove();
-            textoDiv.innerHTML += mensaje.charAt(i);
+            textoDiv.innerHTML+=mensaje.charAt(i);
             textoDiv.appendChild(cursor);
-
-            const parteFinal="¡Feliz San Valentín! 💖";
-            const inicioFinal=mensaje.indexOf(parteFinal);
-
-            let velocidad=35;
-            if(i>=inicioFinal){
-                velocidad=90;
-            }
-
             i++;
-            setTimeout(escribir,velocidad);
-
+            setTimeout(escribir,35);
         }else{
             cursor.remove();
             document.getElementById("foto").style.opacity=1;

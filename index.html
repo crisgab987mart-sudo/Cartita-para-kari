@@ -3,240 +3,243 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Para Karime</title>
+<title>Para Karime 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
 
 <style>
+
 body{
     margin:0;
     background:black;
     overflow:hidden;
-    font-family:'Courier New', monospace;
+    font-family:'Playfair Display', serif;
+    color:white;
     text-align:center;
-    color:white;
 }
 
-canvas{
-    position:fixed;
-    top:0;
-    left:0;
-    z-index:0;
+/* ESTRELLAS */
+@keyframes parpadear{
+    0%{opacity:0.2;}
+    50%{opacity:1;}
+    100%{opacity:0.2;}
 }
 
-.container{
-    position:relative;
-    z-index:5;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-}
-
-#typeText{
-    font-size:28px;
-    min-height:60px;
-    color:white;
-}
-
-#mensaje{
-    margin-top:20px;
-    font-size:20px;
-    max-width:80%;
-    min-height:80px;
-}
-
-.option{
-    margin:10px auto;
+/* BOTONES */
+button{
     padding:12px 25px;
-    font-size:18px;
+    margin:15px;
     border:none;
-    border-radius:25px;
+    border-radius:20px;
+    font-size:18px;
     cursor:pointer;
-    transition:.3s;
 }
 
-#yes{
-    background:#ff4d6d;
+.si{
+    background:#ff4da6;
     color:white;
 }
 
-#no{
+.no{
     background:#444;
     color:white;
+    position:relative;
 }
+
+/* CARTA */
+#carta{
+    display:none;
+    padding:20px;
+}
+
+#texto{
+    width:80%;
+    margin:auto;
+    font-size:20px;
+    min-height:120px;
+}
+
+#foto{
+    width:250px;
+    margin-top:20px;
+    border-radius:20px;
+    opacity:0;
+    transition:2s;
+}
+
+/* CORAZONES */
+@keyframes flotar{
+    0%{transform:translateY(0);opacity:1;}
+    100%{transform:translateY(-600px);opacity:0;}
+}
+
 </style>
 </head>
-
 <body>
 
-<canvas id="canvas"></canvas>
+<div id="inicio">
+    <h1>Con cariño para Karime 💖</h1>
+    <button class="si" onclick="iniciarConstelacion()">Descubrir sorpresa</button>
+    <button id="btnNo" class="no"
+        onmouseover="moverNo()"
+        ontouchstart="moverNo()">
+        No
+    </button>
+</div>
 
-<div class="container">
-    <div id="typeText"></div>
+<canvas id="canvas" style="display:none;"></canvas>
 
-    <button id="yes" class="option">💌 Descubre tu sorpresa</button>
-    <button id="no" class="option">🙈 No</button>
-
-    <div id="mensaje"></div>
+<div id="carta">
+    <div id="texto"></div>
+    <img id="foto" src="foto.PNG">
 </div>
 
 <audio id="buh" src="buh.mp3"></audio>
-<audio id="music" src="sorpresa.mp3"></audio>
+<audio id="musica" src="sorpresa.mp3"></audio>
 
 <script>
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
 
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-
-/* ⭐ Estrellas cinematográficas */
-let stars=[];
-for(let i=0;i<180;i++){
-    stars.push({
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        r:Math.random()*2.5,
-        alpha:Math.random(),
-        speed:(Math.random()*0.015)+0.003,
-        direction:1,
-        glow:Math.random()>0.7
-    });
+/* ESTRELLAS */
+for(let i=0;i<150;i++){
+    const estrella=document.createElement("div");
+    estrella.style.position="fixed";
+    estrella.style.width=Math.random()*3+1+"px";
+    estrella.style.height=estrella.style.width;
+    estrella.style.background="white";
+    estrella.style.borderRadius="50%";
+    estrella.style.top=Math.random()*100+"vh";
+    estrella.style.left=Math.random()*100+"vw";
+    estrella.style.opacity=Math.random();
+    estrella.style.animation=`parpadear ${Math.random()*3+2}s infinite`;
+    document.body.appendChild(estrella);
 }
 
-function drawStars(){
-    stars.forEach(s=>{
-        if(s.alpha<=0.2){ s.direction=1; }
-        if(s.alpha>=1){ s.direction=-1; }
-
-        s.alpha+=s.speed*s.direction;
-
-        if(s.glow){
-            ctx.shadowBlur=15;
-            ctx.shadowColor="white";
-        }else{
-            ctx.shadowBlur=0;
-        }
-
-        ctx.fillStyle="rgba(255,255,255,"+s.alpha+")";
-        ctx.beginPath();
-        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-        ctx.fill();
-        ctx.shadowBlur=0;
-    });
-}
-
-/* ✨ Coordenadas centradas automáticamente */
-function centerShape(points,offsetX){
-    return points.map(p=>({
-        x:canvas.width/2 + p.x + offsetX,
-        y:canvas.height/2 + p.y
-    }));
-}
-
-const K=centerShape([
-    {x:-180,y:-80},{x:-180,y:80},
-    {x:-180,y:0},{x:-120,y:-80},
-    {x:-180,y:0},{x:-120,y:80}
-],0);
-
-const C=centerShape([
-    {x:120,y:-60},{x:60,y:-80},
-    {x:0,y:-40},{x:0,y:40},
-    {x:60,y:80},{x:120,y:60}
-],0);
-
-const heart=centerShape([
-    {x:-30,y:-20},{x:-60,y:-50},
-    {x:-90,y:-20},{x:0,y:80},
-    {x:90,y:-20},{x:60,y:-50},
-    {x:30,y:-20}
-],0);
-
-let progress=0;
-
-function drawLines(points,count){
-    ctx.strokeStyle="white";
-    ctx.shadowBlur=20;
-    ctx.shadowColor="white";
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    for(let i=0;i<count && i<points.length;i++){
-        if(i===0){
-            ctx.moveTo(points[i].x,points[i].y);
-        }else{
-            ctx.lineTo(points[i].x,points[i].y);
-        }
-    }
-    ctx.stroke();
-    ctx.shadowBlur=0;
-}
-
-function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    drawStars();
-
-    if(progress<K.length){
-        drawLines(K,progress);
-        drawLines(C,progress);
-    }else{
-        drawLines(K,K.length);
-        drawLines(C,C.length);
-    }
-
-    if(progress>K.length){
-        drawLines(heart,progress-K.length);
-    }
-
-    progress+=0.05;
-    requestAnimationFrame(animate);
-}
-animate();
-
-/* ⌨️ Máquina de escribir */
-const text="💖Para Karime💖";
-let i=0;
-function typeWriter(){
-    if(i<text.length){
-        document.getElementById("typeText").innerHTML+=text.charAt(i);
-        i++;
-        setTimeout(typeWriter,80);
-    }
-}
-typeWriter();
-
-/* 💌 Mensaje sorpresa */
-const mensajeFinal="✨ Este 14 de febrero me alegra haberte encontrado. Aunque llevamos poco tiempo, tienes algo especial que me encanta descubrir cada día. ✨";
-
-document.getElementById("yes").addEventListener("click",()=>{
-    document.getElementById("music").play();
-    let j=0;
-    const mensajeDiv=document.getElementById("mensaje");
-    mensajeDiv.innerHTML="";
-    function escribir(){
-        if(j<mensajeFinal.length){
-            mensajeDiv.innerHTML+=mensajeFinal.charAt(j);
-            j++;
-            setTimeout(escribir,40);
-        }
-    }
-    escribir();
-});
-
-/* 🙈 Botón No que no sale de pantalla */
-const noBtn=document.getElementById("no");
-
-function moveButton(){
-    const maxX=window.innerWidth-noBtn.offsetWidth-20;
-    const maxY=window.innerHeight-noBtn.offsetHeight-20;
-    noBtn.style.position="fixed";
-    noBtn.style.left=Math.random()*maxX+"px";
-    noBtn.style.top=Math.random()*maxY+"px";
+/* BOTÓN NO */
+function moverNo(){
+    const boton=document.getElementById("btnNo");
+    const maxX=window.innerWidth-boton.offsetWidth-20;
+    const maxY=window.innerHeight-boton.offsetHeight-20;
+    boton.style.position="fixed";
+    boton.style.left=Math.random()*maxX+"px";
+    boton.style.top=Math.random()*maxY+"px";
     document.getElementById("buh").play();
 }
 
-noBtn.addEventListener("mouseover",moveButton);
-noBtn.addEventListener("click",moveButton);
+/* CONSTELACIÓN */
+function iniciarConstelacion(){
+
+    document.getElementById("inicio").style.display="none";
+
+    const canvas=document.getElementById("canvas");
+    canvas.style.display="block";
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
+
+    const ctx=canvas.getContext("2d");
+    const cx=canvas.width/2;
+    const cy=canvas.height/2;
+
+    let progreso=0;
+
+    function dibujar(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        ctx.strokeStyle="white";
+        ctx.lineWidth=3;
+        ctx.shadowColor="#ff4da6";
+        ctx.shadowBlur=15;
+
+        if(progreso>0){
+            // K
+            ctx.beginPath();
+            ctx.moveTo(cx-200,cy-100);
+            ctx.lineTo(cx-200,cy+100);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(cx-200,cy);
+            ctx.lineTo(cx-120,cy-100);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(cx-200,cy);
+            ctx.lineTo(cx-120,cy+100);
+            ctx.stroke();
+        }
+
+        if(progreso>1){
+            // C
+            ctx.beginPath();
+            ctx.arc(cx+200,cy,100,0.25*Math.PI,1.75*Math.PI);
+            ctx.stroke();
+        }
+
+        if(progreso>2){
+            // CORAZÓN PERFECTO
+            const size=50;
+            ctx.beginPath();
+            ctx.moveTo(cx,cy+30);
+            ctx.bezierCurveTo(cx-80,cy-40,cx-80,cy+80,cx,cy+120);
+            ctx.bezierCurveTo(cx+80,cy+80,cx+80,cy-40,cx,cy+30);
+            ctx.stroke();
+        }
+    }
+
+    const intervalo=setInterval(()=>{
+        progreso++;
+        dibujar();
+        if(progreso>2){
+            clearInterval(intervalo);
+            setTimeout(()=>{
+                canvas.style.display="none";
+                mostrarCarta();
+            },2000);
+        }
+    },1500);
+}
+
+/* CARTA */
+function mostrarCarta(){
+
+    document.getElementById("carta").style.display="block";
+    document.getElementById("musica").play();
+
+    const mensaje=`Este 14 de febrero me gustaría decirte que me alegra mucho habernos encontrado. 
+Aunque llevamos poco tiempo, tienes algo que me cautivó desde el primer día y me encanta la forma en la que te estoy conociendo. 
+Espero que tengas un día increíble 💖`;
+
+    let i=0;
+    const velocidad=40;
+    const textoDiv=document.getElementById("texto");
+
+    function escribir(){
+        if(i<mensaje.length){
+            textoDiv.innerHTML+=mensaje.charAt(i);
+            i++;
+            setTimeout(escribir,velocidad);
+        }else{
+            document.getElementById("foto").style.opacity=1;
+            lanzarCorazones();
+        }
+    }
+
+    escribir();
+}
+
+/* CORAZONES */
+function lanzarCorazones(){
+    for(let i=0;i<25;i++){
+        const corazon=document.createElement("div");
+        corazon.innerHTML="💖";
+        corazon.style.position="fixed";
+        corazon.style.left=Math.random()*100+"vw";
+        corazon.style.bottom="0";
+        corazon.style.fontSize=Math.random()*20+20+"px";
+        corazon.style.animation=`flotar ${Math.random()*3+3}s linear`;
+        document.body.appendChild(corazon);
+        setTimeout(()=>{corazon.remove();},5000);
+    }
+}
 
 </script>
 </body>

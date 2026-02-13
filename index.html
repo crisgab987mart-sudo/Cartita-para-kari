@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Para Karime 💖</title>
 
-<!-- Tipografía más elegante -->
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet">
 
 <style>
@@ -41,8 +40,10 @@ body{
     margin-top:30px;
     display:flex;
     justify-content:center;
+    align-items:center;
     gap:20px;
     flex-wrap:wrap;
+    position:relative;
 }
 
 button{
@@ -62,7 +63,6 @@ button{
 .no{
     background:#444;
     color:white;
-    position:fixed;
 }
 
 /* CARTA */
@@ -142,18 +142,24 @@ for(let i=0;i<150;i++){
 
 /* BOTÓN NO */
 function moverNo(){
+
     const boton=document.getElementById("btnNo");
-    const maxX=window.innerWidth-boton.offsetWidth-20;
-    const maxY=window.innerHeight-boton.offsetHeight-20;
+
+    const margen=20;
+
+    const maxX=window.innerWidth-boton.offsetWidth-margen;
+    const maxY=window.innerHeight-boton.offsetHeight-margen;
+
+    boton.style.position="fixed";
     boton.style.left=Math.random()*maxX+"px";
     boton.style.top=Math.random()*maxY+"px";
+
     document.getElementById("buh").play();
 }
 
-/* CONSTELACIÓN */
+/* CONSTELACIÓN RESPONSIVE */
 function iniciarConstelacion(){
 
-    // Forzar reproducción en móviles
     const musica=document.getElementById("musica");
     musica.play().catch(()=>{});
 
@@ -168,9 +174,13 @@ function iniciarConstelacion(){
     const cx=canvas.width/2;
     const cy=canvas.height/2;
 
+    const separacion = canvas.width * 0.18;
+    const size = canvas.height * 0.15;
+
     let progreso=0;
 
     function dibujar(){
+
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
         ctx.strokeStyle="white";
@@ -181,34 +191,34 @@ function iniciarConstelacion(){
         if(progreso>=1){
             // K
             ctx.beginPath();
-            ctx.moveTo(cx-200,cy-100);
-            ctx.lineTo(cx-200,cy+100);
+            ctx.moveTo(cx-separacion,cy-size);
+            ctx.lineTo(cx-separacion,cy+size);
             ctx.stroke();
 
             ctx.beginPath();
-            ctx.moveTo(cx-200,cy);
-            ctx.lineTo(cx-120,cy-100);
+            ctx.moveTo(cx-separacion,cy);
+            ctx.lineTo(cx-separacion+size*0.7,cy-size);
             ctx.stroke();
 
             ctx.beginPath();
-            ctx.moveTo(cx-200,cy);
-            ctx.lineTo(cx-120,cy+100);
+            ctx.moveTo(cx-separacion,cy);
+            ctx.lineTo(cx-separacion+size*0.7,cy+size);
             ctx.stroke();
         }
 
         if(progreso>=2){
             // C
             ctx.beginPath();
-            ctx.arc(cx+200,cy,100,0.25*Math.PI,1.75*Math.PI);
+            ctx.arc(cx+separacion,cy,size,0.25*Math.PI,1.75*Math.PI);
             ctx.stroke();
         }
 
         if(progreso>=3){
-            // CORAZÓN PERFECTO
+            // CORAZÓN
             ctx.beginPath();
-            ctx.moveTo(cx,cy+30);
-            ctx.bezierCurveTo(cx-80,cy-40,cx-80,cy+80,cx,cy+120);
-            ctx.bezierCurveTo(cx+80,cy+80,cx+80,cy-40,cx,cy+30);
+            ctx.moveTo(cx,cy+size*0.3);
+            ctx.bezierCurveTo(cx-size*0.8,cy-size*0.4,cx-size*0.8,cy+size*0.8,cx,cy+size*1.2);
+            ctx.bezierCurveTo(cx+size*0.8,cy+size*0.8,cx+size*0.8,cy-size*0.4,cx,cy+size*0.3);
             ctx.stroke();
         }
     }
@@ -232,7 +242,7 @@ function mostrarCarta(){
     document.getElementById("carta").style.display="block";
 
     const mensaje=`Este 14 de febrero me gustaría decirte que me alegra mucho habernos encontrado.
-Aunque llevamos poco tiempo, tienes algo que me cautivó desde el primer día y me encanta la forma en la que te estoy conociendo.
+Aunque llevamos poco tiempo, tienes algo que me cautivó desde el primer día y me encanta la forma en la que te estoy conociiendo.
 Espero que tengas un día increíble 💖`;
 
     let i=0;

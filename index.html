@@ -5,17 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Para Karime 💖</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+<!-- Tipografía más elegante -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet">
 
 <style>
 
 body{
     margin:0;
+    padding:0;
     background:black;
     overflow:hidden;
-    font-family:'Playfair Display', serif;
+    font-family:'Cormorant Garamond', serif;
     color:white;
+}
+
+/* CENTRADO PERFECTO */
+#inicio{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
     text-align:center;
+    width:90%;
 }
 
 /* ESTRELLAS */
@@ -26,13 +37,21 @@ body{
 }
 
 /* BOTONES */
+.botones{
+    margin-top:30px;
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
 button{
-    padding:12px 25px;
-    margin:15px;
+    padding:12px 28px;
     border:none;
-    border-radius:20px;
+    border-radius:30px;
     font-size:18px;
     cursor:pointer;
+    min-width:180px;
 }
 
 .si{
@@ -43,24 +62,28 @@ button{
 .no{
     background:#444;
     color:white;
-    position:relative;
+    position:fixed;
 }
 
 /* CARTA */
 #carta{
     display:none;
-    padding:20px;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:85%;
+    max-width:600px;
+    text-align:center;
 }
 
 #texto{
-    width:80%;
-    margin:auto;
-    font-size:20px;
-    min-height:120px;
+    font-size:22px;
+    min-height:140px;
 }
 
 #foto{
-    width:250px;
+    width:260px;
     margin-top:20px;
     border-radius:20px;
     opacity:0;
@@ -79,12 +102,15 @@ button{
 
 <div id="inicio">
     <h1>Con cariño para Karime 💖</h1>
-    <button class="si" onclick="iniciarConstelacion()">Descubrir sorpresa</button>
-    <button id="btnNo" class="no"
-        onmouseover="moverNo()"
-        ontouchstart="moverNo()">
-        No
-    </button>
+
+    <div class="botones">
+        <button class="si" onclick="iniciarConstelacion()">Descubrir sorpresa</button>
+        <button id="btnNo" class="no"
+            onmouseover="moverNo()"
+            ontouchstart="moverNo()">
+            No
+        </button>
+    </div>
 </div>
 
 <canvas id="canvas" style="display:none;"></canvas>
@@ -119,7 +145,6 @@ function moverNo(){
     const boton=document.getElementById("btnNo");
     const maxX=window.innerWidth-boton.offsetWidth-20;
     const maxY=window.innerHeight-boton.offsetHeight-20;
-    boton.style.position="fixed";
     boton.style.left=Math.random()*maxX+"px";
     boton.style.top=Math.random()*maxY+"px";
     document.getElementById("buh").play();
@@ -127,6 +152,10 @@ function moverNo(){
 
 /* CONSTELACIÓN */
 function iniciarConstelacion(){
+
+    // Forzar reproducción en móviles
+    const musica=document.getElementById("musica");
+    musica.play().catch(()=>{});
 
     document.getElementById("inicio").style.display="none";
 
@@ -147,9 +176,9 @@ function iniciarConstelacion(){
         ctx.strokeStyle="white";
         ctx.lineWidth=3;
         ctx.shadowColor="#ff4da6";
-        ctx.shadowBlur=15;
+        ctx.shadowBlur=20;
 
-        if(progreso>0){
+        if(progreso>=1){
             // K
             ctx.beginPath();
             ctx.moveTo(cx-200,cy-100);
@@ -167,16 +196,15 @@ function iniciarConstelacion(){
             ctx.stroke();
         }
 
-        if(progreso>1){
+        if(progreso>=2){
             // C
             ctx.beginPath();
             ctx.arc(cx+200,cy,100,0.25*Math.PI,1.75*Math.PI);
             ctx.stroke();
         }
 
-        if(progreso>2){
+        if(progreso>=3){
             // CORAZÓN PERFECTO
-            const size=50;
             ctx.beginPath();
             ctx.moveTo(cx,cy+30);
             ctx.bezierCurveTo(cx-80,cy-40,cx-80,cy+80,cx,cy+120);
@@ -188,35 +216,33 @@ function iniciarConstelacion(){
     const intervalo=setInterval(()=>{
         progreso++;
         dibujar();
-        if(progreso>2){
+        if(progreso>3){
             clearInterval(intervalo);
             setTimeout(()=>{
                 canvas.style.display="none";
                 mostrarCarta();
             },2000);
         }
-    },1500);
+    },1200);
 }
 
 /* CARTA */
 function mostrarCarta(){
 
     document.getElementById("carta").style.display="block";
-    document.getElementById("musica").play();
 
-    const mensaje=`Este 14 de febrero me gustaría decirte que me alegra mucho habernos encontrado. 
-Aunque llevamos poco tiempo, tienes algo que me cautivó desde el primer día y me encanta la forma en la que te estoy conociendo. 
+    const mensaje=`Este 14 de febrero me gustaría decirte que me alegra mucho habernos encontrado.
+Aunque llevamos poco tiempo, tienes algo que me cautivó desde el primer día y me encanta la forma en la que te estoy conociendo.
 Espero que tengas un día increíble 💖`;
 
     let i=0;
-    const velocidad=40;
     const textoDiv=document.getElementById("texto");
 
     function escribir(){
         if(i<mensaje.length){
             textoDiv.innerHTML+=mensaje.charAt(i);
             i++;
-            setTimeout(escribir,velocidad);
+            setTimeout(escribir,35);
         }else{
             document.getElementById("foto").style.opacity=1;
             lanzarCorazones();

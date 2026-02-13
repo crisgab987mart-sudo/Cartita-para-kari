@@ -63,15 +63,19 @@ button{
     color:white;
 }
 
+/* 🔥 Carta corregida */
 #carta{
     display:none;
     position:fixed;
-    top:50%;
+    top:10vh;
     left:50%;
-    transform:translate(-50%,-50%);
+    transform:translateX(-50%);
     width:85%;
     max-width:650px;
+    max-height:80vh;
+    overflow-y:auto;
     text-align:center;
+    padding-bottom:40px;
 }
 
 #texto{
@@ -106,7 +110,7 @@ button{
 <div id="inicio">
     <h1>Con cariño para Karime 💖</h1>
     <div class="botones">
-        <button class="si" onclick="iniciarConstelacion()">Descubrir sorpresa</button>
+        <button id="btnSi" class="si">Descubrir sorpresa</button>
         <button id="btnNo" class="no"
             onmouseover="moverNo()"
             ontouchstart="moverNo()">
@@ -128,7 +132,7 @@ button{
 <script>
 
 /* ===============================
-   UNIVERSO PROFUNDO
+   FONDO ESTRELLAS
 ================================= */
 
 const fondo = document.createElement("canvas");
@@ -140,15 +144,18 @@ fondo.style.zIndex="-1";
 
 const ctxFondo = fondo.getContext("2d");
 
-fondo.width = window.innerWidth;
-fondo.height = window.innerHeight;
+function resize(){
+    fondo.width = window.innerWidth;
+    fondo.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
 
 let estrellas = [];
-
 for(let i=0;i<200;i++){
     estrellas.push({
-        x:Math.random()*fondo.width,
-        y:Math.random()*fondo.height,
+        x:Math.random()*window.innerWidth,
+        y:Math.random()*window.innerHeight,
         size:Math.random()*2,
         speed:Math.random()*0.4+0.1
     });
@@ -171,7 +178,6 @@ function animarFondo(){
 
     requestAnimationFrame(animarFondo);
 }
-
 animarFondo();
 
 /* ===============================
@@ -190,13 +196,26 @@ function moverNo(){
 }
 
 /* ===============================
+   BOTÓN SI CORREGIDO
+================================= */
+
+document.getElementById("btnSi").addEventListener("click", function(){
+
+    const boton = this;
+    boton.disabled = true;
+
+    const musica = document.getElementById("musica");
+    musica.volume = 0.8;
+    musica.play().catch(()=>{});
+
+    iniciarConstelacion();
+});
+
+/* ===============================
    CONSTELACIÓN
 ================================= */
 
 function iniciarConstelacion(){
-
-    const musica=document.getElementById("musica");
-    musica.play().catch(()=>{});
 
     document.getElementById("inicio").style.display="none";
 
@@ -277,7 +296,7 @@ function mostrarCarta(){
     document.getElementById("carta").style.display="block";
 
     const mensaje=`Este 14 de febrero me gustaría decirte que me alegra mucho habernos encontrado.
-Aunque llevamos poco tiempo, tienes algo que me cautivó desde el primer día y me encanta la forma en la que te estoy conociendo.
+Aunque llevamos poco tiempo, tienes algo que me cautivó desde el primer día y me encanta la forma en la que te estoy conociiendo.
 Espero que tengas un día increíble 💖`;
 
     let i=0;

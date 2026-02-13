@@ -18,20 +18,12 @@ body{
     color:white;
 }
 
-/* Transiciones globales */
+/* Transiciones */
 .fadeOut{
     animation:fadeOut 1s forwards;
 }
 @keyframes fadeOut{
     to{opacity:0;transform:scale(0.95);}
-}
-
-.fadeIn{
-    animation:fadeIn 1.2s forwards;
-}
-@keyframes fadeIn{
-    from{opacity:0;transform:scale(0.9);}
-    to{opacity:1;transform:scale(1);}
 }
 
 h1{
@@ -121,11 +113,7 @@ button{
     <h1>Con cariño para Karime 💖</h1>
     <div class="botones">
         <button id="btnSi" class="si">Descubrir sorpresa</button>
-        <button id="btnNo" class="no"
-            onmouseover="moverNo()"
-            ontouchstart="moverNo()">
-            No
-        </button>
+        <button id="btnNo" class="no">No</button>
     </div>
 </div>
 
@@ -142,7 +130,7 @@ button{
 <script>
 
 /* ===============================
-   UNIVERSO CINEMATOGRÁFICO
+   UNIVERSO CINEMÁTICO
 ================================= */
 
 const fondo=document.createElement("canvas");
@@ -178,9 +166,10 @@ function animarFondo(){
     estrellas.forEach(e=>{
         e.y+=e.speed;
         e.x+=e.speed*0.2;
-
-        if(e.y>fondo.height){e.y=0;e.x=Math.random()*fondo.width;}
-
+        if(e.y>fondo.height){
+            e.y=0;
+            e.x=Math.random()*fondo.width;
+        }
         ctxFondo.beginPath();
         ctxFondo.arc(e.x,e.y,e.size,0,Math.PI*2);
         ctxFondo.fill();
@@ -191,26 +180,50 @@ function animarFondo(){
 animarFondo();
 
 /* ===============================
-   BOTONES
+   BOTONES CORREGIDOS
 ================================= */
 
-function moverNo(){
-    const boton=document.getElementById("btnNo");
-    boton.style.position="fixed";
-    boton.style.left=Math.random()*80+"vw";
-    boton.style.top=Math.random()*80+"vh";
-    document.getElementById("buh").play();
-}
+const btnSi=document.getElementById("btnSi");
+const btnNo=document.getElementById("btnNo");
 
-document.getElementById("btnSi").addEventListener("click",function(){
-    this.disabled=true;
+let bloqueado=false;
+
+btnSi.addEventListener("click",function(){
+
+    if(bloqueado) return;
+    bloqueado=true;
+
+    btnNo.style.pointerEvents="none";
+    btnSi.disabled=true;
+
     document.getElementById("musica").play().catch(()=>{});
     document.getElementById("inicio").classList.add("fadeOut");
+
     setTimeout(iniciarConstelacion,1000);
 });
 
+btnNo.addEventListener("click",moverNo);
+btnNo.addEventListener("touchstart",function(e){
+    e.preventDefault();
+    moverNo();
+});
+
+function moverNo(){
+    if(bloqueado) return;
+
+    const margen=20;
+    const maxX=window.innerWidth-btnNo.offsetWidth-margen;
+    const maxY=window.innerHeight-btnNo.offsetHeight-margen;
+
+    btnNo.style.position="fixed";
+    btnNo.style.left=Math.random()*maxX+"px";
+    btnNo.style.top=Math.random()*maxY+"px";
+
+    document.getElementById("buh").play().catch(()=>{});
+}
+
 /* ===============================
-   CONSTELACIÓN ANIMADA
+   CONSTELACIÓN K Y C + ESTRELLA
 ================================= */
 
 function iniciarConstelacion(){
@@ -226,43 +239,103 @@ function iniciarConstelacion(){
     const cx=canvas.width/2;
     const cy=canvas.height/2;
 
-    let progress=0;
+    const size=Math.min(canvas.width,canvas.height)*0.12;
+    const separacion=size*2.5;
 
-    function drawLine(x1,y1,x2,y2,percent){
+    let progreso=0;
+
+    function drawLine(x1,y1,x2,y2,p){
         ctx.beginPath();
         ctx.moveTo(x1,y1);
-        ctx.lineTo(x1+(x2-x1)*percent,y1+(y2-y1)*percent);
+        ctx.lineTo(x1+(x2-x1)*p,y1+(y2-y1)*p);
         ctx.stroke();
     }
 
-    function animate(){
+    function animar(){
         ctx.clearRect(0,0,canvas.width,canvas.height);
         ctx.strokeStyle="white";
         ctx.lineWidth=3;
         ctx.shadowColor="#ff4da6";
-        ctx.shadowBlur=20;
+        ctx.shadowBlur=25;
 
-        progress+=0.02;
+        progreso+=0.015;
 
-        drawLine(cx-200,cy-150,cx-200,cy+150,Math.min(progress,1));
-        if(progress>1)
-        drawLine(cx+200,cy-150,cx+200,cy+150,Math.min(progress-1,1));
+        if(progreso<=1)
+            drawLine(cx-separacion,cy-size,cx-separacion,cy+size,progreso);
+        else
+            drawLine(cx-separacion,cy-size,cx-separacion,cy+size,1);
 
-        if(progress<2){
-            requestAnimationFrame(animate);
+        if(progreso>1)
+            drawLine(cx-separacion,cy,cx-separacion+size*0.8,cy-size,Math.min(progreso-1,1));
+
+        if(progreso>2)
+            drawLine(cx-separacion,cy,cx-separacion+size*0.8,cy+size,Math.min(progreso-2,1));
+
+        if(progreso>3){
+            ctx.beginPath();
+            ctx.arc(cx+separacion,cy,size,0.25*Math.PI,
+                (0.25*Math.PI)+(Math.min(progreso-3,1)*1.5*Math.PI));
+            ctx.stroke();
+        }
+
+        if(progreso<4){
+            requestAnimationFrame(animar);
         }else{
-            setTimeout(()=>{
-                canvas.style.display="none";
-                mostrarCarta();
-            },1500);
+            estrellaFugaz();
         }
     }
 
-    animate();
+    function estrellaFugaz(){
+
+        let x=-100;
+        let y=Math.random()*canvas.height*0.5;
+        let longitud=150;
+
+        function animarEstrella(){
+
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+
+            ctx.strokeStyle="white";
+            ctx.lineWidth=3;
+            ctx.shadowColor="#ff4da6";
+            ctx.shadowBlur=40;
+
+            drawLine(cx-separacion,cy-size,cx-separacion,cy+size,1);
+            drawLine(cx-separacion,cy,cx-separacion+size*0.8,cy-size,1);
+            drawLine(cx-separacion,cy,cx-separacion+size*0.8,cy+size,1);
+
+            ctx.beginPath();
+            ctx.arc(cx+separacion,cy,size,0.25*Math.PI,1.75*Math.PI);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(x,y);
+            ctx.lineTo(x-longitud,y);
+            ctx.lineWidth=2;
+            ctx.shadowBlur=20;
+            ctx.stroke();
+
+            x+=15;
+            y+=5;
+
+            if(x<canvas.width+200){
+                requestAnimationFrame(animarEstrella);
+            }else{
+                setTimeout(()=>{
+                    canvas.style.display="none";
+                    mostrarCarta();
+                },800);
+            }
+        }
+
+        animarEstrella();
+    }
+
+    animar();
 }
 
 /* ===============================
-   CARTA CINEMÁTICA
+   CARTA + CORAZONES
 ================================= */
 
 function mostrarCarta(){
@@ -303,10 +376,6 @@ Espero que tengas un día increíble 💖`;
 
     escribir();
 }
-
-/* ===============================
-   CORAZONES PROFUNDIDAD
-================================= */
 
 function lanzarCorazones(){
     for(let i=0;i<30;i++){

@@ -18,11 +18,27 @@ body{
     color:white;
 }
 
+/* Transiciones globales */
+.fadeOut{
+    animation:fadeOut 1s forwards;
+}
+@keyframes fadeOut{
+    to{opacity:0;transform:scale(0.95);}
+}
+
+.fadeIn{
+    animation:fadeIn 1.2s forwards;
+}
+@keyframes fadeIn{
+    from{opacity:0;transform:scale(0.9);}
+    to{opacity:1;transform:scale(1);}
+}
+
 h1{
     font-family:'Great Vibes', cursive;
     font-size:52px;
     letter-spacing:2px;
-    text-shadow:0 0 15px rgba(255,77,166,0.6);
+    text-shadow:0 0 20px rgba(255,77,166,0.8);
 }
 
 #inicio{
@@ -32,13 +48,13 @@ h1{
     transform:translate(-50%,-50%);
     text-align:center;
     width:90%;
+    transition:1s;
 }
 
 .botones{
     margin-top:30px;
     display:flex;
     justify-content:center;
-    align-items:center;
     gap:20px;
     flex-wrap:wrap;
 }
@@ -53,29 +69,23 @@ button{
     font-family:'Cormorant Garamond', serif;
 }
 
-.si{
-    background:#ff4da6;
-    color:white;
-}
+.si{background:#ff4da6;color:white;}
+.no{background:#444;color:white;}
 
-.no{
-    background:#444;
-    color:white;
-}
-
-/* 🔥 Carta corregida */
 #carta{
     display:none;
     position:fixed;
     top:10vh;
     left:50%;
-    transform:translateX(-50%);
+    transform:translateX(-50%) scale(0.9);
     width:85%;
     max-width:650px;
     max-height:80vh;
     overflow-y:auto;
     text-align:center;
-    padding-bottom:40px;
+    opacity:0;
+    backdrop-filter:blur(6px);
+    transition:1.5s;
 }
 
 #texto{
@@ -93,8 +103,8 @@ button{
 }
 
 @keyframes flotar{
-    0%{transform:translateY(0);opacity:1;}
-    100%{transform:translateY(-600px);opacity:0;}
+    0%{transform:translateY(0) scale(1);opacity:1;}
+    100%{transform:translateY(-600px) scale(1.3);opacity:0;}
 }
 
 @keyframes parpadear{
@@ -132,32 +142,32 @@ button{
 <script>
 
 /* ===============================
-   FONDO ESTRELLAS
+   UNIVERSO CINEMATOGRÁFICO
 ================================= */
 
-const fondo = document.createElement("canvas");
+const fondo=document.createElement("canvas");
 document.body.appendChild(fondo);
 fondo.style.position="fixed";
 fondo.style.top=0;
 fondo.style.left=0;
 fondo.style.zIndex="-1";
 
-const ctxFondo = fondo.getContext("2d");
+const ctxFondo=fondo.getContext("2d");
 
 function resize(){
-    fondo.width = window.innerWidth;
-    fondo.height = window.innerHeight;
+    fondo.width=window.innerWidth;
+    fondo.height=window.innerHeight;
 }
 resize();
-window.addEventListener("resize", resize);
+window.addEventListener("resize",resize);
 
-let estrellas = [];
-for(let i=0;i<200;i++){
+let estrellas=[];
+for(let i=0;i<250;i++){
     estrellas.push({
-        x:Math.random()*window.innerWidth,
-        y:Math.random()*window.innerHeight,
-        size:Math.random()*2,
-        speed:Math.random()*0.4+0.1
+        x:Math.random()*fondo.width,
+        y:Math.random()*fondo.height,
+        size:Math.random()*2.5,
+        speed:Math.random()*0.3+0.05
     });
 }
 
@@ -166,11 +176,11 @@ function animarFondo(){
     ctxFondo.fillStyle="white";
 
     estrellas.forEach(e=>{
-        e.y += e.speed;
-        if(e.y > fondo.height){
-            e.y = 0;
-            e.x = Math.random()*fondo.width;
-        }
+        e.y+=e.speed;
+        e.x+=e.speed*0.2;
+
+        if(e.y>fondo.height){e.y=0;e.x=Math.random()*fondo.width;}
+
         ctxFondo.beginPath();
         ctxFondo.arc(e.x,e.y,e.size,0,Math.PI*2);
         ctxFondo.fill();
@@ -181,38 +191,26 @@ function animarFondo(){
 animarFondo();
 
 /* ===============================
-   BOTÓN NO
+   BOTONES
 ================================= */
 
 function moverNo(){
     const boton=document.getElementById("btnNo");
-    const margen=20;
-    const maxX=window.innerWidth-boton.offsetWidth-margen;
-    const maxY=window.innerHeight-boton.offsetHeight-margen;
     boton.style.position="fixed";
-    boton.style.left=Math.random()*maxX+"px";
-    boton.style.top=Math.random()*maxY+"px";
+    boton.style.left=Math.random()*80+"vw";
+    boton.style.top=Math.random()*80+"vh";
     document.getElementById("buh").play();
 }
 
-/* ===============================
-   BOTÓN SI CORREGIDO
-================================= */
-
-document.getElementById("btnSi").addEventListener("click", function(){
-
-    const boton = this;
-    boton.disabled = true;
-
-    const musica = document.getElementById("musica");
-    musica.volume = 0.8;
-    musica.play().catch(()=>{});
-
-    iniciarConstelacion();
+document.getElementById("btnSi").addEventListener("click",function(){
+    this.disabled=true;
+    document.getElementById("musica").play().catch(()=>{});
+    document.getElementById("inicio").classList.add("fadeOut");
+    setTimeout(iniciarConstelacion,1000);
 });
 
 /* ===============================
-   CONSTELACIÓN
+   CONSTELACIÓN ANIMADA
 ================================= */
 
 function iniciarConstelacion(){
@@ -228,81 +226,63 @@ function iniciarConstelacion(){
     const cx=canvas.width/2;
     const cy=canvas.height/2;
 
-    const size = Math.min(canvas.width, canvas.height) * 0.12;
-    const separacion = size * 2.2;
+    let progress=0;
 
-    let progreso=0;
+    function drawLine(x1,y1,x2,y2,percent){
+        ctx.beginPath();
+        ctx.moveTo(x1,y1);
+        ctx.lineTo(x1+(x2-x1)*percent,y1+(y2-y1)*percent);
+        ctx.stroke();
+    }
 
-    function dibujar(){
-
+    function animate(){
         ctx.clearRect(0,0,canvas.width,canvas.height);
-
         ctx.strokeStyle="white";
         ctx.lineWidth=3;
         ctx.shadowColor="#ff4da6";
         ctx.shadowBlur=20;
 
-        if(progreso>=1){
-            ctx.beginPath();
-            ctx.moveTo(cx-separacion,cy-size);
-            ctx.lineTo(cx-separacion,cy+size);
-            ctx.stroke();
+        progress+=0.02;
 
-            ctx.beginPath();
-            ctx.moveTo(cx-separacion,cy);
-            ctx.lineTo(cx-separacion+size*0.7,cy-size);
-            ctx.stroke();
+        drawLine(cx-200,cy-150,cx-200,cy+150,Math.min(progress,1));
+        if(progress>1)
+        drawLine(cx+200,cy-150,cx+200,cy+150,Math.min(progress-1,1));
 
-            ctx.beginPath();
-            ctx.moveTo(cx-separacion,cy);
-            ctx.lineTo(cx-separacion+size*0.7,cy+size);
-            ctx.stroke();
-        }
-
-        if(progreso>=2){
-            ctx.beginPath();
-            ctx.arc(cx+separacion,cy,size,0.25*Math.PI,1.75*Math.PI);
-            ctx.stroke();
-        }
-
-        if(progreso>=3){
-            ctx.beginPath();
-            ctx.moveTo(cx,cy+size*0.3);
-            ctx.bezierCurveTo(cx-size*0.8,cy-size*0.4,cx-size*0.8,cy+size*0.8,cx,cy+size*1.2);
-            ctx.bezierCurveTo(cx+size*0.8,cy+size*0.8,cx+size*0.8,cy-size*0.4,cx,cy+size*0.3);
-            ctx.stroke();
-        }
-    }
-
-    const intervalo=setInterval(()=>{
-        progreso++;
-        dibujar();
-        if(progreso>3){
-            clearInterval(intervalo);
+        if(progress<2){
+            requestAnimationFrame(animate);
+        }else{
             setTimeout(()=>{
                 canvas.style.display="none";
                 mostrarCarta();
-            },2000);
+            },1500);
         }
-    },1200);
+    }
+
+    animate();
 }
 
 /* ===============================
-   EFECTO TINTA
+   CARTA CINEMÁTICA
 ================================= */
 
 function mostrarCarta(){
 
-    document.getElementById("carta").style.display="block";
+    const carta=document.getElementById("carta");
+    carta.style.display="block";
+
+    setTimeout(()=>{
+        carta.style.opacity=1;
+        carta.style.transform="translateX(-50%) scale(1)";
+    },100);
 
     const mensaje=`Este 14 de febrero me gustaría decirte que me alegra mucho habernos encontrado.
-Aunque llevamos poco tiempo, tienes algo que me cautivó desde el primer día y me encanta la forma en la que te estoy conociiendo.
+Aunque llevamos poco tiempo, tienes algo que me cautivó desde el primer día y me encanta la forma en la que te estoy conociendo.
 Espero que tengas un día increíble 💖`;
 
     let i=0;
     const textoDiv=document.getElementById("texto");
 
-    const cursor = document.createElement("span");
+    const cursor=document.createElement("span");
     cursor.innerHTML="|";
     cursor.style.animation="parpadear 1s infinite";
     textoDiv.appendChild(cursor);
@@ -310,10 +290,10 @@ Espero que tengas un día increíble 💖`;
     function escribir(){
         if(i<mensaje.length){
             cursor.remove();
-            textoDiv.innerHTML += mensaje.charAt(i);
+            textoDiv.innerHTML+=mensaje.charAt(i);
             textoDiv.appendChild(cursor);
             i++;
-            setTimeout(escribir,40);
+            setTimeout(escribir,35);
         }else{
             cursor.remove();
             document.getElementById("foto").style.opacity=1;
@@ -325,20 +305,20 @@ Espero que tengas un día increíble 💖`;
 }
 
 /* ===============================
-   CORAZONES
+   CORAZONES PROFUNDIDAD
 ================================= */
 
 function lanzarCorazones(){
-    for(let i=0;i<25;i++){
-        const corazon=document.createElement("div");
-        corazon.innerHTML="💖";
-        corazon.style.position="fixed";
-        corazon.style.left=Math.random()*100+"vw";
-        corazon.style.bottom="0";
-        corazon.style.fontSize=Math.random()*20+20+"px";
-        corazon.style.animation=`flotar ${Math.random()*3+3}s linear`;
-        document.body.appendChild(corazon);
-        setTimeout(()=>{corazon.remove();},5000);
+    for(let i=0;i<30;i++){
+        const c=document.createElement("div");
+        c.innerHTML="💖";
+        c.style.position="fixed";
+        c.style.left=Math.random()*100+"vw";
+        c.style.bottom="0";
+        c.style.fontSize=Math.random()*30+15+"px";
+        c.style.animation=`flotar ${Math.random()*4+3}s linear`;
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(),7000);
     }
 }
 

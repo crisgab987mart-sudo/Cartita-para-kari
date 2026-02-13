@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Karime 💖</title>
+
+<style>
+
+body{
+    margin:0;
+    padding:0;
+    background:black;
+    overflow:hidden;
+    font-family:'Segoe UI',sans-serif;
+    text-align:center;
+    color:white;
+}
+
+/* ESTRELLAS */
+@keyframes parpadear{
+    0%{opacity:0.2;}
+    50%{opacity:1;}
+    100%{opacity:0.2;}
+}
+
+/* BOTONES */
+button{
+    padding:12px 25px;
+    margin:15px;
+    border:none;
+    border-radius:20px;
+    font-size:18px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.si{
+    background:#ff4da6;
+    color:white;
+}
+
+.no{
+    background:#555;
+    color:white;
+}
+
+/* CARTA */
+#carta{
+    display:none;
+    padding:20px;
+}
+
+#mensaje{
+    font-size:20px;
+    margin:20px;
+    opacity:0;
+    transition:1.5s;
+}
+
+#foto{
+    width:250px;
+    margin-top:20px;
+    border-radius:20px;
+    opacity:0;
+    transition:2s;
+}
+
+/* CORAZONES FLOTANDO */
+@keyframes flotar{
+    0%{transform:translateY(0);opacity:1;}
+    100%{transform:translateY(-600px);opacity:0;}
+}
+
+</style>
+</head>
+<body>
+
+<div id="intro">
+    <h1>Con cariño para Karime 💖</h1>
+    <button class="si" onclick="mostrarConstelacion()">Describir sorpresa</button>
+    <button id="btnNo" class="no"
+        onmouseover="moverNo()"
+        ontouchstart="moverNo()">
+        No
+    </button>
+</div>
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+<div id="carta">
+    <div id="mensaje">
+        Este 14 de febrero me gustaría decirte que me alegra mucho habernos encontrado.
+        Aunque llevamos poco tiempo, tienes algo que me cautivó desde el primer día y
+        me encanta la forma en la que te estoy conociendo.
+        Espero que tengas un día increíble 💖
+    </div>
+    <img id="foto" src="foto.PNG">
+</div>
+
+<audio id="buh" src="buh.mp3"></audio>
+<audio id="musica" src="sorpresa.mp3"></audio>
+
+<script>
+
+/* ESTRELLAS */
+for(let i=0;i<150;i++){
+    const estrella=document.createElement("div");
+    estrella.style.position="fixed";
+    estrella.style.width=Math.random()*3+1+"px";
+    estrella.style.height=estrella.style.width;
+    estrella.style.background="white";
+    estrella.style.borderRadius="50%";
+    estrella.style.top=Math.random()*100+"vh";
+    estrella.style.left=Math.random()*100+"vw";
+    estrella.style.opacity=Math.random();
+    estrella.style.animation=`parpadear ${Math.random()*3+2}s infinite ease-in-out`;
+    document.body.appendChild(estrella);
+}
+
+/* BOTÓN NO */
+function moverNo(){
+
+    const boton = document.getElementById("btnNo");
+
+    const anchoPantalla = window.innerWidth;
+    const altoPantalla = window.innerHeight;
+
+    const anchoBoton = boton.offsetWidth;
+    const altoBoton = boton.offsetHeight;
+
+    const margen = 20;
+
+    const maxX = anchoPantalla - anchoBoton - margen;
+    const maxY = altoPantalla - altoBoton - margen;
+
+    const nuevaX = Math.random() * maxX;
+    const nuevaY = Math.random() * maxY;
+
+    boton.style.position = "fixed";
+    boton.style.left = nuevaX + "px";
+    boton.style.top = nuevaY + "px";
+
+    document.getElementById("buh").play();
+}
+
+/* CONSTELACIÓN */
+function mostrarConstelacion(){
+
+    document.getElementById("intro").style.display="none";
+
+    const canvas=document.getElementById("canvas");
+    canvas.style.display="block";
+
+    const ctx=canvas.getContext("2d");
+
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
+
+    const centerX=canvas.width/2;
+    const centerY=canvas.height/2;
+
+    const size=100;
+    let glow=0;
+
+    function dibujar(){
+
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        glow+=0.05;
+        const brillo=10+Math.sin(glow)*8;
+
+        ctx.shadowColor="#ff4da6";
+        ctx.shadowBlur=brillo;
+        ctx.strokeStyle="white";
+        ctx.lineWidth=3;
+
+        /* K */
+        ctx.beginPath();
+        ctx.moveTo(centerX-220,centerY-size);
+        ctx.lineTo(centerX-220,centerY+size);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(centerX-220,centerY);
+        ctx.lineTo(centerX-150,centerY-size);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(centerX-220,centerY);
+        ctx.lineTo(centerX-150,centerY+size);
+        ctx.stroke();
+
+        /* CORAZÓN */
+        const heartSize=35+Math.sin(glow*2)*5;
+
+        ctx.beginPath();
+        ctx.moveTo(centerX,centerY);
+        ctx.bezierCurveTo(centerX,centerY-heartSize,
+            centerX-heartSize,centerY-heartSize,
+            centerX-heartSize,centerY);
+        ctx.bezierCurveTo(centerX-heartSize,centerY+heartSize,
+            centerX,centerY+heartSize+10,
+            centerX,centerY+heartSize+20);
+        ctx.bezierCurveTo(centerX,centerY+heartSize+10,
+            centerX+heartSize,centerY+heartSize,
+            centerX+heartSize,centerY);
+        ctx.bezierCurveTo(centerX+heartSize,centerY-heartSize,
+            centerX,centerY-heartSize,
+            centerX,centerY);
+        ctx.stroke();
+
+        /* C */
+        ctx.beginPath();
+        ctx.arc(centerX+220,centerY,size,0.25*Math.PI,1.75*Math.PI);
+        ctx.stroke();
+
+        requestAnimationFrame(dibujar);
+    }
+
+    dibujar();
+
+    setTimeout(()=>{
+        canvas.style.display="none";
+        abrirCarta();
+    },6000);
+}
+
+/* ABRIR CARTA */
+function abrirCarta(){
+
+    document.getElementById("carta").style.display="block";
+    document.getElementById("musica").play();
+
+    setTimeout(()=>{
+        document.getElementById("mensaje").style.opacity=1;
+        document.getElementById("foto").style.opacity=1;
+        corazones();
+    },1000);
+}
+
+/* CORAZONES */
+function corazones(){
+    for(let i=0;i<20;i++){
+        const corazon=document.createElement("div");
+        corazon.innerHTML="💖";
+        corazon.style.position="fixed";
+        corazon.style.left=Math.random()*100+"vw";
+        corazon.style.bottom="0px";
+        corazon.style.fontSize=Math.random()*20+20+"px";
+        corazon.style.animation=`flotar ${Math.random()*3+3}s linear`;
+        document.body.appendChild(corazon);
+
+        setTimeout(()=>{corazon.remove();},5000);
+    }
+}
+
+</script>
+
+</body>
+</html>

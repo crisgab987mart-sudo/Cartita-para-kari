@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Para Karime 💖</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
 <style>
 
 body{
@@ -12,7 +14,7 @@ body{
     padding:0;
     background:black;
     overflow:hidden;
-    font-family:'Segoe UI',sans-serif;
+    font-family:'Great Vibes', cursive;
     text-align:center;
     color:white;
 }
@@ -30,7 +32,7 @@ button{
     margin:15px;
     border:none;
     border-radius:20px;
-    font-size:18px;
+    font-size:22px;
     cursor:pointer;
     transition:0.3s;
 }
@@ -52,21 +54,21 @@ button{
 }
 
 #mensaje{
-    font-size:20px;
+    font-size:28px;
     margin:20px;
     opacity:0;
-    transition:1.5s;
+    transition:2s;
 }
 
 #foto{
-    width:250px;
+    width:260px;
     margin-top:20px;
     border-radius:20px;
     opacity:0;
     transition:2s;
 }
 
-/* CORAZONES FLOTANDO */
+/* CORAZONES */
 @keyframes flotar{
     0%{transform:translateY(0);opacity:1;}
     100%{transform:translateY(-600px);opacity:0;}
@@ -77,12 +79,16 @@ button{
 <body>
 
 <div id="intro">
-    <h1>Con cariño para Karime 💖</h1>
-    <button class="si" onclick="mostrarConstelacion()">Describir sorpresa</button>
+    <h1 style="font-size:40px;">Con cariño para Karime 💖</h1>
+
+    <button class="si" onclick="mostrarConstelacion()">
+        💌 Describir sorpresa
+    </button>
+
     <button id="btnNo" class="no"
         onmouseover="moverNo()"
         ontouchstart="moverNo()">
-        No
+        🙈 No
     </button>
 </div>
 
@@ -141,7 +147,9 @@ function moverNo(){
     boton.style.left = nuevaX + "px";
     boton.style.top = nuevaY + "px";
 
-    document.getElementById("buh").play();
+    const sonido = document.getElementById("buh");
+    sonido.currentTime = 0;
+    sonido.play().catch(()=>{});
 }
 
 /* CONSTELACIÓN */
@@ -160,39 +168,40 @@ function mostrarConstelacion(){
     const centerX=canvas.width/2;
     const centerY=canvas.height/2;
 
-    const size=100;
+    const size=90;
     let glow=0;
+    let progresoLinea=0;
 
     function dibujar(){
 
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
         glow+=0.05;
-        const brillo=10+Math.sin(glow)*8;
+        const brillo=12+Math.sin(glow)*8;
 
         ctx.shadowColor="#ff4da6";
         ctx.shadowBlur=brillo;
         ctx.strokeStyle="white";
-        ctx.lineWidth=3;
+        ctx.lineWidth=2;
 
         /* K */
         ctx.beginPath();
-        ctx.moveTo(centerX-220,centerY-size);
-        ctx.lineTo(centerX-220,centerY+size);
+        ctx.moveTo(centerX-200,centerY-size);
+        ctx.lineTo(centerX-200,centerY+size);
         ctx.stroke();
 
         ctx.beginPath();
-        ctx.moveTo(centerX-220,centerY);
-        ctx.lineTo(centerX-150,centerY-size);
+        ctx.moveTo(centerX-200,centerY);
+        ctx.lineTo(centerX-130,centerY-size);
         ctx.stroke();
 
         ctx.beginPath();
-        ctx.moveTo(centerX-220,centerY);
-        ctx.lineTo(centerX-150,centerY+size);
+        ctx.moveTo(centerX-200,centerY);
+        ctx.lineTo(centerX-130,centerY+size);
         ctx.stroke();
 
         /* CORAZÓN */
-        const heartSize=35+Math.sin(glow*2)*5;
+        const heartSize=30+Math.sin(glow*2)*5;
 
         ctx.beginPath();
         ctx.moveTo(centerX,centerY);
@@ -212,7 +221,20 @@ function mostrarConstelacion(){
 
         /* C */
         ctx.beginPath();
-        ctx.arc(centerX+220,centerY,size,0.25*Math.PI,1.75*Math.PI);
+        ctx.arc(centerX+200,centerY,size,0.25*Math.PI,1.75*Math.PI);
+        ctx.stroke();
+
+        /* LÍNEAS ANIMADAS */
+        if(progresoLinea < 1) progresoLinea += 0.02;
+
+        ctx.beginPath();
+        ctx.moveTo(centerX-130,centerY);
+        ctx.lineTo(centerX-130 + (100*progresoLinea),centerY);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(centerX+30,centerY);
+        ctx.lineTo(centerX+30 + (80*progresoLinea),centerY);
         ctx.stroke();
 
         requestAnimationFrame(dibujar);
@@ -230,7 +252,10 @@ function mostrarConstelacion(){
 function abrirCarta(){
 
     document.getElementById("carta").style.display="block";
-    document.getElementById("musica").play();
+
+    const musica = document.getElementById("musica");
+    musica.currentTime = 0;
+    musica.play().catch(()=>{});
 
     setTimeout(()=>{
         document.getElementById("mensaje").style.opacity=1;

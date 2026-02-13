@@ -19,6 +19,16 @@ body{
     color:white;
 }
 
+/* CENTRAR INTRO */
+#intro{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    text-align:center;
+    width:90%;
+}
+
 /* ESTRELLAS */
 @keyframes parpadear{
     0%{opacity:0.2;}
@@ -56,8 +66,7 @@ button{
 #mensaje{
     font-size:28px;
     margin:20px;
-    opacity:0;
-    transition:2s;
+    min-height:150px;
 }
 
 #foto{
@@ -82,7 +91,7 @@ button{
     <h1 style="font-size:40px;">Con cariño para Karime 💖</h1>
 
     <button class="si" onclick="mostrarConstelacion()">
-        💌 Describir sorpresa
+        💌 Descubrir sorpresa
     </button>
 
     <button id="btnNo" class="no"
@@ -95,12 +104,7 @@ button{
 <canvas id="canvas" style="display:none;"></canvas>
 
 <div id="carta">
-    <div id="mensaje">
-        Este 14 de febrero me gustaría decirte que me alegra mucho habernos encontrado.
-        Aunque llevamos poco tiempo, tienes algo que me cautivó desde el primer día y
-        me encanta la forma en la que te estoy conociendo.
-        Espero que tengas un día increíble 💖
-    </div>
+    <div id="mensaje"></div>
     <img id="foto" src="foto.PNG">
 </div>
 
@@ -108,6 +112,27 @@ button{
 <audio id="musica" src="sorpresa.mp3"></audio>
 
 <script>
+
+/* TEXTO CARTA */
+const textoCarta = `Este 14 de febrero me gustaría decirte que me alegra mucho habernos encontrado.
+Aunque llevamos poco tiempo, tienes algo que me cautivó desde el primer día y
+me encanta la forma en la que te estoy conociendo.
+Espero que tengas un día increíble 💖`;
+
+/* EFECTO MÁQUINA DE ESCRIBIR */
+function escribirTexto(){
+    const mensaje = document.getElementById("mensaje");
+    let i = 0;
+
+    function escribir(){
+        if(i < textoCarta.length){
+            mensaje.innerHTML += textoCarta.charAt(i);
+            i++;
+            setTimeout(escribir, 40);
+        }
+    }
+    escribir();
+}
 
 /* ESTRELLAS */
 for(let i=0;i<150;i++){
@@ -126,26 +151,14 @@ for(let i=0;i<150;i++){
 
 /* BOTÓN NO */
 function moverNo(){
-
     const boton = document.getElementById("btnNo");
 
-    const anchoPantalla = window.innerWidth;
-    const altoPantalla = window.innerHeight;
+    const maxX = window.innerWidth - boton.offsetWidth - 20;
+    const maxY = window.innerHeight - boton.offsetHeight - 20;
 
-    const anchoBoton = boton.offsetWidth;
-    const altoBoton = boton.offsetHeight;
-
-    const margen = 20;
-
-    const maxX = anchoPantalla - anchoBoton - margen;
-    const maxY = altoPantalla - altoBoton - margen;
-
-    const nuevaX = Math.random() * maxX;
-    const nuevaY = Math.random() * maxY;
-
-    boton.style.position = "fixed";
-    boton.style.left = nuevaX + "px";
-    boton.style.top = nuevaY + "px";
+    boton.style.position="fixed";
+    boton.style.left = Math.random() * maxX + "px";
+    boton.style.top = Math.random() * maxY + "px";
 
     const sonido = document.getElementById("buh");
     sonido.currentTime = 0;
@@ -155,13 +168,17 @@ function moverNo(){
 /* CONSTELACIÓN */
 function mostrarConstelacion(){
 
+    // 🔊 Música empieza aquí
+    const musica = document.getElementById("musica");
+    musica.currentTime = 0;
+    musica.play().catch(()=>{});
+
     document.getElementById("intro").style.display="none";
 
     const canvas=document.getElementById("canvas");
     canvas.style.display="block";
 
     const ctx=canvas.getContext("2d");
-
     canvas.width=window.innerWidth;
     canvas.height=window.innerHeight;
 
@@ -250,15 +267,10 @@ function mostrarConstelacion(){
 
 /* ABRIR CARTA */
 function abrirCarta(){
-
     document.getElementById("carta").style.display="block";
 
-    const musica = document.getElementById("musica");
-    musica.currentTime = 0;
-    musica.play().catch(()=>{});
-
     setTimeout(()=>{
-        document.getElementById("mensaje").style.opacity=1;
+        escribirTexto();
         document.getElementById("foto").style.opacity=1;
         corazones();
     },1000);

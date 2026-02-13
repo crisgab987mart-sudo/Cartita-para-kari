@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Para Karime 💖</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 
@@ -16,6 +16,14 @@ body{
     overflow:hidden;
     font-family:'Cormorant Garamond', serif;
     color:white;
+}
+
+/* TÍTULO ROMÁNTICO */
+h1{
+    font-family:'Great Vibes', cursive;
+    font-size:52px;
+    letter-spacing:2px;
+    text-shadow:0 0 15px rgba(255,77,166,0.6);
 }
 
 /* CENTRADO PERFECTO */
@@ -52,6 +60,7 @@ button{
     font-size:18px;
     cursor:pointer;
     min-width:180px;
+    font-family:'Cormorant Garamond', serif;
 }
 
 .si{
@@ -72,13 +81,14 @@ button{
     left:50%;
     transform:translate(-50%,-50%);
     width:85%;
-    max-width:600px;
+    max-width:650px;
     text-align:center;
 }
 
 #texto{
-    font-size:22px;
-    min-height:140px;
+    font-size:26px;
+    line-height:1.6;
+    min-height:150px;
 }
 
 #foto{
@@ -151,7 +161,7 @@ function moverNo(){
     document.getElementById("buh").play();
 }
 
-/* CONSTELACIÓN RESPONSIVE MEJOR ACOMODADA */
+/* CONSTELACIÓN */
 function iniciarConstelacion(){
 
     const musica=document.getElementById("musica");
@@ -183,7 +193,6 @@ function iniciarConstelacion(){
         ctx.shadowBlur=20;
 
         if(progreso>=1){
-            // K
             ctx.beginPath();
             ctx.moveTo(cx-separacion,cy-size);
             ctx.lineTo(cx-separacion,cy+size);
@@ -201,14 +210,12 @@ function iniciarConstelacion(){
         }
 
         if(progreso>=2){
-            // C
             ctx.beginPath();
             ctx.arc(cx+separacion,cy,size,0.25*Math.PI,1.75*Math.PI);
             ctx.stroke();
         }
 
         if(progreso>=3){
-            // CORAZÓN
             ctx.beginPath();
             ctx.moveTo(cx,cy+size*0.3);
             ctx.bezierCurveTo(cx-size*0.8,cy-size*0.4,cx-size*0.8,cy+size*0.8,cx,cy+size*1.2);

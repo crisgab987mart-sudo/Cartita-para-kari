@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Karime 💖</title>
+<title>💖Para Karime💖</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 
-/* ===========================
+/* ============================
    CONFIG GENERAL
-=========================== */
+============================ */
 
 body{
 margin:0;
@@ -22,7 +22,7 @@ overflow:hidden;
 font-family:'Cormorant Garamond', serif;
 }
 
-.fadeOverlay{
+.fade{
 position:fixed;
 width:100%;
 height:100%;
@@ -33,9 +33,9 @@ transition:2s;
 z-index:50;
 }
 
-/* ===========================
-   INICIO
-=========================== */
+/* ============================
+   PANTALLA INICIAL
+============================ */
 
 #inicio{
 position:fixed;
@@ -43,35 +43,35 @@ top:50%;
 left:50%;
 transform:translate(-50%,-50%);
 text-align:center;
-z-index:10;
+z-index:20;
 }
 
 h1{
 font-family:'Great Vibes', cursive;
-font-size:60px;
-text-shadow:0 0 40px #ff4da6;
-animation:brilloTitulo 3s infinite alternate;
+font-size:65px;
+text-shadow:0 0 30px #ff4da6;
+animation:tituloGlow 3s infinite alternate;
 }
 
-@keyframes brilloTitulo{
+@keyframes tituloGlow{
 0%{text-shadow:0 0 20px #ff4da6;}
-100%{text-shadow:0 0 60px #ff99cc;}
+100%{text-shadow:0 0 70px #ff99cc;}
 }
 
 .botones{
-margin-top:40px;
+margin-top:50px;
 display:flex;
 gap:40px;
 justify-content:center;
 }
 
 button{
-padding:16px 35px;
+padding:18px 40px;
 border:none;
 border-radius:50px;
 font-size:18px;
 cursor:pointer;
-min-width:200px;
+min-width:220px;
 transition:0.3s;
 }
 
@@ -84,12 +84,12 @@ box-shadow:0 0 20px #ff4da6;
 .no{
 background:#444;
 color:white;
-position:relative;
+position:fixed;
 }
 
-/* ===========================
+/* ============================
    CONSTELACION
-=========================== */
+============================ */
 
 #constelacion{
 position:fixed;
@@ -100,34 +100,44 @@ overflow:hidden;
 background:black;
 }
 
+/* Capas parallax */
+
+.layer{
+position:absolute;
+width:100%;
+height:100%;
+pointer-events:none;
+}
+
 .star{
 position:absolute;
 border-radius:50%;
-animation:parpadeo infinite alternate;
+background:white;
+opacity:0;
+animation:twinkle infinite alternate;
 }
 
-@keyframes parpadeo{
+@keyframes twinkle{
 0%{opacity:0.2;}
 100%{opacity:1;}
 }
 
-.layer1{animation-duration:3s;}
-.layer2{animation-duration:5s;}
-.layer3{animation-duration:7s;}
+/* SVG */
 
 svg{
 position:absolute;
 width:100%;
 height:100%;
+z-index:10;
 }
 
 .linea{
 stroke:white;
 stroke-width:2;
-stroke-dasharray:500;
-stroke-dashoffset:500;
-animation:dibujar 4s forwards;
-filter:drop-shadow(0 0 6px white);
+stroke-dasharray:600;
+stroke-dashoffset:600;
+animation:dibujar 5s forwards;
+filter:drop-shadow(0 0 8px white);
 }
 
 @keyframes dibujar{
@@ -138,57 +148,52 @@ to{stroke-dashoffset:0;}
 stroke:#ff4da6;
 stroke-width:3;
 fill:none;
-stroke-dasharray:700;
-stroke-dashoffset:700;
-animation:dibujar 5s forwards 2s, latir 2s infinite 7s;
+stroke-dasharray:800;
+stroke-dashoffset:800;
+animation:dibujar 6s forwards 2s, latido 2s infinite 8s;
 transform-origin:center;
-filter:drop-shadow(0 0 15px #ff4da6);
+filter:drop-shadow(0 0 20px #ff4da6);
 }
 
-@keyframes latir{
+@keyframes latido{
 0%,100%{transform:scale(1);}
-50%{transform:scale(1.08);}
+50%{transform:scale(1.1);}
 }
 
-/* estrella fugaz */
+/* Estrella fugaz */
 
 .fugaz{
 position:absolute;
 width:4px;
-height:180px;
+height:200px;
 background:linear-gradient(white,transparent);
 transform:rotate(45deg);
-animation:fugaz 4s linear infinite;
+opacity:0;
 }
 
-@keyframes fugaz{
-0%{transform:translate(-300px,-300px) rotate(45deg);opacity:0;}
-20%{opacity:1;}
-100%{transform:translate(120vw,120vh) rotate(45deg);opacity:0;}
-}
-
-/* ===========================
+/* ============================
    CARTA
-=========================== */
+============================ */
 
 #carta{
 display:none;
 position:fixed;
-top:10vh;
+top:8vh;
 left:50%;
 transform:translateX(-50%);
 width:85%;
-max-width:700px;
-max-height:80vh;
+max-width:750px;
+max-height:82vh;
 overflow-y:auto;
-text-align:center;
-z-index:20;
+z-index:30;
 }
 
 #texto{
-font-size:28px;
-line-height:1.6;
-min-height:150px;
+font-size:26px;
+line-height:1.9;
+white-space:pre-line;
+text-align:left;
+padding:20px 30px;
 }
 
 .cursor{
@@ -205,32 +210,34 @@ animation:blink 1s infinite;
 }
 
 #foto{
-width:280px;
-margin-top:25px;
+width:300px;
+margin-top:30px;
 border-radius:20px;
 opacity:0;
-transition:3s;
 transform:scale(0.8);
+transition:3s;
 }
 
-.zoomFoto{
+.zoom{
 opacity:1;
 transform:scale(1);
 }
 
+/* corazones */
+
 @keyframes flotar{
 0%{transform:translateY(0);opacity:1;}
-100%{transform:translateY(-700px);opacity:0;}
+100%{transform:translateY(-800px);opacity:0;}
 }
 
 </style>
 </head>
 <body>
 
-<div class="fadeOverlay" id="fade"></div>
+<div class="fade" id="fade"></div>
 
 <div id="inicio">
-<h1>Karime 💖</h1>
+<h1>💖Para Karime💖</h1>
 <div class="botones">
 <button id="btnSi" class="si">Descubrir sorpresa</button>
 <button id="btnNo" class="no">No</button>
@@ -238,17 +245,19 @@ transform:scale(1);
 </div>
 
 <div id="constelacion">
+
+<div class="layer" id="layer1"></div>
+<div class="layer" id="layer2"></div>
+<div class="layer" id="layer3"></div>
+
 <svg viewBox="0 0 1000 600">
 
-<!-- K -->
 <line class="linea" x1="300" y1="150" x2="300" y2="450"/>
 <line class="linea" x1="300" y1="300" x2="450" y2="150"/>
 <line class="linea" x1="300" y1="300" x2="450" y2="450"/>
 
-<!-- C -->
 <path class="linea" d="M750 200 Q600 300 750 400"/>
 
-<!-- CORAZON -->
 <path class="corazon" d="
 M500 350
 C500 300 560 300 560 350
@@ -258,7 +267,8 @@ C560 470 500 420 500 350"/>
 
 </svg>
 
-<div class="fugaz"></div>
+<div class="fugaz" id="fugaz"></div>
+
 </div>
 
 <div id="carta">
@@ -266,96 +276,248 @@ C560 470 500 420 500 350"/>
 <img id="foto" src="foto.png">
 </div>
 
-<audio id="musica" src="musica.mp3"></audio>
+<audio id="audioSi" src="sorpresa.mp3"></audio>
+<audio id="audioNo" src="buh.mp3"></<script>
 
-<script>
+/* ============================
+   VARIABLES GENERALES
+============================ */
 
-/* BOTON NO */
-const btnNo=document.getElementById("btnNo");
-btnNo.addEventListener("click",()=>{
-const margen=20;
-const maxX=window.innerWidth-btnNo.offsetWidth-margen;
-const maxY=window.innerHeight-btnNo.offsetHeight-margen;
-btnNo.style.position="fixed";
-btnNo.style.left=Math.random()*maxX+"px";
-btnNo.style.top=Math.random()*maxY+"px";
+const btnSi = document.getElementById("btnSi");
+const btnNo = document.getElementById("btnNo");
+const audioSi = document.getElementById("audioSi");
+const audioNo = document.getElementById("audioNo");
+const constelacion = document.getElementById("constelacion");
+const fade = document.getElementById("fade");
+const texto = document.getElementById("texto");
+const foto = document.getElementById("foto");
+
+let estrellasActivas = true;
+let generadorEstrellas;
+let animacionFugaz;
+
+/* ============================
+   BOTÓN NO (movimiento agresivo)
+============================ */
+
+btnNo.addEventListener("click", () => {
+
+audioNo.currentTime = 0;
+audioNo.play().catch(()=>{});
+
+let x = Math.random() * (window.innerWidth + 400) - 200;
+let y = Math.random() * (window.innerHeight + 400) - 200;
+
+btnNo.style.left = x + "px";
+btnNo.style.top = y + "px";
+
 });
 
-/* BOTON SI */
-const btnSi=document.getElementById("btnSi");
-btnSi.addEventListener("click",()=>{
-document.getElementById("musica").play();
-document.getElementById("inicio").style.display="none";
+/* ============================
+   BOTÓN SÍ
+============================ */
+
+btnSi.addEventListener("click", async () => {
+
+try{
+await audioSi.play();
+}catch(e){}
+
+document.getElementById("inicio").style.display = "none";
 iniciarConstelacion();
+
 });
 
-/* CONSTELACION */
-function iniciarConstelacion(){
-const cont=document.getElementById("constelacion");
-cont.style.display="block";
+/* ============================
+   GENERADOR CONTINUO DE ESTRELLAS
+============================ */
 
-/* crear estrellas multicapa */
-for(let i=0;i<200;i++){
-let star=document.createElement("div");
+function crearEstrella(layer, velocidad){
+
+let star = document.createElement("div");
 star.classList.add("star");
-let size=Math.random()*3;
-star.style.width=size+"px";
-star.style.height=size+"px";
-star.style.left=Math.random()*window.innerWidth+"px";
-star.style.top=Math.random()*window.innerHeight+"px";
-let layer=Math.ceil(Math.random()*3);
-star.classList.add("layer"+layer);
-cont.appendChild(star);
+
+let size = Math.random()*3+1;
+star.style.width = size+"px";
+star.style.height = size+"px";
+
+star.style.left = Math.random()*window.innerWidth+"px";
+star.style.top = Math.random()*window.innerHeight+"px";
+
+star.style.animationDuration = (2+Math.random()*4)+"s";
+
+layer.appendChild(star);
+
+/* movimiento parallax */
+let desplazamiento = 0;
+
+function mover(){
+if(!estrellasActivas) return;
+desplazamiento += velocidad;
+star.style.top = (parseFloat(star.style.top)+velocidad)+"px";
+
+if(parseFloat(star.style.top) > window.innerHeight){
+star.remove();
+return;
 }
 
-/* transición después de 10s */
+requestAnimationFrame(mover);
+}
+
+mover();
+}
+
+function iniciarGenerador(){
+
+const layer1 = document.getElementById("layer1");
+const layer2 = document.getElementById("layer2");
+const layer3 = document.getElementById("layer3");
+
+generadorEstrellas = setInterval(()=>{
+
+crearEstrella(layer1,0.3);
+crearEstrella(layer2,0.6);
+crearEstrella(layer3,1);
+
+},200);
+
+}
+
+/* ============================
+   ESTRELLA FUGAZ CON PARTÍCULAS
+============================ */
+
+function iniciarFugaz(){
+
+const fugaz = document.getElementById("fugaz");
+
+animacionFugaz = setInterval(()=>{
+
+fugaz.style.transition = "none";
+fugaz.style.opacity = 0;
+fugaz.style.left = "-300px";
+fugaz.style.top = "-300px";
+
 setTimeout(()=>{
-document.getElementById("fade").style.opacity=1;
+fugaz.style.transition = "4s linear";
+fugaz.style.opacity = 1;
+fugaz.style.left = "120vw";
+fugaz.style.top = "120vh";
+
+crearParticulas();
+},100);
+
+},5000);
+
+}
+
+function crearParticulas(){
+
+for(let i=0;i<20;i++){
+
+let p = document.createElement("div");
+p.classList.add("star");
+
+let size = Math.random()*2+1;
+p.style.width = size+"px";
+p.style.height = size+"px";
+
+p.style.left = Math.random()*window.innerWidth+"px";
+p.style.top = Math.random()*window.innerHeight+"px";
+
+p.style.animationDuration="1s";
+
+constelacion.appendChild(p);
+
+setTimeout(()=>p.remove(),1000);
+
+}
+
+}
+
+/* ============================
+   INICIAR CONSTELACIÓN
+============================ */
+
+function iniciarConstelacion(){
+
+constelacion.style.display = "block";
+
+iniciarGenerador();
+iniciarFugaz();
+
+/* transición cinematográfica */
+
 setTimeout(()=>{
-cont.style.display="none";
-document.getElementById("fade").style.opacity=0;
-mostrarCarta();
-},2000);
+fade.style.opacity=1;
 },10000);
+
+setTimeout(()=>{
+estrellasActivas=false;
+clearInterval(generadorEstrellas);
+clearInterval(animacionFugaz);
+constelacion.style.display="none";
+fade.style.opacity=0;
+mostrarCarta();
+},12000);
+
 }
 
-/* CARTA */
+/* ============================
+   CARTA
+============================ */
+
 function mostrarCarta(){
 document.getElementById("carta").style.display="block";
 escribirTexto();
 }
 
-const mensaje="Karime, desde que llegaste a mi vida todo tiene un brillo diferente. Gracias por existir, por sonreír, por iluminar mis días… 💖";
+const mensaje = `Hola, Karime:
+No quería dejar pasar este 14 de febrero sin decirte algo. Aunque llevamos poco tiempo de conocernos, tengo que confesarte que te has convertido en mi parte favorita del día. Me encanta la forma en la que conectamos y lo mucho que disfruto cada minuto a tu lado. Quizás es pronto para muchas cosas, pero es el momento justo para decirte que me encantas y que me hace muy feliz estar conociéndote.
+¡Feliz San Valentín!`;
 
 function escribirTexto(){
+
 let i=0;
-const texto=document.getElementById("texto");
 
 function escribir(){
+
 if(i<mensaje.length){
 texto.innerHTML+=mensaje.charAt(i);
 i++;
-setTimeout(escribir,40);
+setTimeout(escribir,30);
 }else{
-document.getElementById("foto").classList.add("zoomFoto");
+foto.classList.add("zoom");
 lanzarCorazones();
 }
+
 }
+
 escribir();
 }
 
+/* ============================
+   CORAZONES FLOTANTES
+============================ */
+
 function lanzarCorazones(){
-for(let i=0;i<40;i++){
-let corazon=document.createElement("div");
-corazon.innerHTML="💖";
-corazon.style.position="fixed";
-corazon.style.left=Math.random()*window.innerWidth+"px";
-corazon.style.top=window.innerHeight+"px";
-corazon.style.fontSize=(20+Math.random()*20)+"px";
-corazon.style.animation="flotar 5s linear forwards";
-document.body.appendChild(corazon);
-setTimeout(()=>corazon.remove(),5000);
+
+for(let i=0;i<60;i++){
+
+let c=document.createElement("div");
+c.innerHTML="💖";
+c.style.position="fixed";
+c.style.left=Math.random()*window.innerWidth+"px";
+c.style.top=window.innerHeight+"px";
+c.style.fontSize=(20+Math.random()*30)+"px";
+c.style.animation="flotar 6s linear forwards";
+
+document.body.appendChild(c);
+
+setTimeout(()=>c.remove(),6000);
+
 }
+
 }
 
 </script>

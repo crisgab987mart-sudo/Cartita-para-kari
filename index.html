@@ -43,7 +43,6 @@ body{
     align-items:center;
     gap:20px;
     flex-wrap:wrap;
-    position:relative;
 }
 
 button{
@@ -142,22 +141,17 @@ for(let i=0;i<150;i++){
 
 /* BOTÓN NO */
 function moverNo(){
-
     const boton=document.getElementById("btnNo");
-
     const margen=20;
-
     const maxX=window.innerWidth-boton.offsetWidth-margen;
     const maxY=window.innerHeight-boton.offsetHeight-margen;
-
     boton.style.position="fixed";
     boton.style.left=Math.random()*maxX+"px";
     boton.style.top=Math.random()*maxY+"px";
-
     document.getElementById("buh").play();
 }
 
-/* CONSTELACIÓN RESPONSIVE */
+/* CONSTELACIÓN RESPONSIVE MEJOR ACOMODADA */
 function iniciarConstelacion(){
 
     const musica=document.getElementById("musica");
@@ -174,8 +168,8 @@ function iniciarConstelacion(){
     const cx=canvas.width/2;
     const cy=canvas.height/2;
 
-    const separacion = canvas.width * 0.18;
-    const size = canvas.height * 0.15;
+    const size = Math.min(canvas.width, canvas.height) * 0.12;
+    const separacion = size * 2.2;
 
     let progreso=0;
 
@@ -242,7 +236,7 @@ function mostrarCarta(){
     document.getElementById("carta").style.display="block";
 
     const mensaje=`Este 14 de febrero me gustaría decirte que me alegra mucho habernos encontrado.
-Aunque llevamos poco tiempo, tienes algo que me cautivó desde el primer día y me encanta la forma en la que te estoy conociiendo.
+Aunque llevamos poco tiempo, tienes algo que me cautivó desde el primer día y me encanta la forma en la que te estoy conociendo.
 Espero que tengas un día increíble 💖`;
 
     let i=0;
